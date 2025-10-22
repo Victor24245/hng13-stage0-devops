@@ -1,12 +1,10 @@
-FROM python:3.11-slim
+# Use the official Nginx image from Docker Hub
+FROM nginx:alpine
 
-WORKDIR /app
+# Copy your static website or app files into the Nginx HTML directory
+COPY ./html /usr/share/nginx/html
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Expose port 80 for HTTP traffic
+EXPOSE 80
 
-COPY . .
-
-EXPOSE 5000
-
-CMD ["python", "app.py"]
+# Nginx starts automatically when the container runs
