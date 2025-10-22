@@ -1,36 +1,16 @@
-# ============================
-# Stage 1: Build
-# ============================
-FROM node:18-alpine AS build
+FROM alpine:latest
 
-# Set working directory
-WORKDIR /usr/src/app
+# Optional: add some useful tools
+RUN apk add --no-cache bash curl
 
-# Copy dependency files first (for caching)
-COPY package*.json ./
+# Default working directory
+WORKDIR /app
 
-# Install dependencies
-RUN npm install --omit=dev
-
-
-# Copy the rest of the application
+# Copy all project files (optional)
 COPY . .
 
-# ============================
-# Stage 2: Runtime
-# ============================
-FROM node:18-alpine
-
-WORKDIR /usr/src/app
-
-# Copy files from the build stage
-COPY --from=build /usr/src/app /usr/src/app
-
-# Set environment variables
-ENV NODE_ENV=production
-
-# Expose the internal port (match user input)
+# Expose a dummy port (match whatever you use in deploy.sh)
 EXPOSE 3000
 
-# Start the app
-CMD ["npm", "start"]
+# Keep container running indefinitely
+CMD ["tail", "-f", "/dev/null"]
